@@ -1,0 +1,14 @@
+{
+  "name": "team-handover",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Team shift handover app — static front end + Vercel serverless API + Postgres",
+  "scripts": {
+    "dev": "vercel dev",
+    "db:init": "node scripts/init-db.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}

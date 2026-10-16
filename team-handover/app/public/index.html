@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Team Handover</title>
+<meta name="theme-color" content="#6b1d34">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236b1d34'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --burgundy-900:#4a1224;--burgundy-800:#5c1830;--burgundy-700:#6b1d34;--burgundy-600:#822540;--burgundy-500:#9b2c4d;
+  --burgundy-100:#f6e7eb;--burgundy-50:#fbf3f5;
+  --bg:#faf7f7;--surface:#fff;--line:#eadfe2;--text:#26171b;--muted:#7a6a6f;
+  --green:#1f7a4d;--green-bg:#e7f4ed;--amber:#9a5b00;--amber-bg:#fdf1de;--red:#b42318;--red-bg:#fde8e7;
+  --radius:12px;--shadow:0 1px 2px rgba(74,18,36,.06),0 4px 14px rgba(74,18,36,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:15px/1.5 "Inter","Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,var(--burgundy-900),var(--burgundy-700) 60%,var(--burgundy-600));color:#fff;padding:18px max(20px,calc((100% - 1200px)/2));display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:11px;background:#fff;display:grid;place-items:center;flex:none}
+.logo svg{width:22px;height:22px}
+header h1{margin:0;font-size:21px;letter-spacing:-.01em}
+header small{color:#e9cdd5}
+#session{color:#f3dde3;font-size:13px;background:rgba(255,255,255,.12);padding:6px 12px;border-radius:99px}
+#session:empty{display:none}
+.wrap{max-width:1200px;margin:auto;padding:22px 20px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+nav button{background:transparent;color:var(--burgundy-800)}
+nav button:hover{background:var(--burgundy-50)}
+nav button.active{background:var(--burgundy-700);color:#fff}
+nav .spacer{flex:1}
+button,.button{border:0;border-radius:9px;padding:10px 16px;background:var(--burgundy-700);color:#fff;cursor:pointer;font:600 14px/1.2 inherit;font-family:inherit;transition:background .15s,box-shadow .15s}
+button:hover,.button:hover{background:var(--burgundy-600)}
+button:focus-visible,.button:focus-within,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #d9a3b4;outline-offset:1px}
+button.secondary,.button.secondary{background:var(--burgundy-100);color:var(--burgundy-800)}
+button.secondary:hover,.button.secondary:hover{background:#efd3db}
+button.danger{background:var(--red)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+h2{font-size:19px;margin:0 0 14px;color:var(--burgundy-800);letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid .panel{margin:0;border-top:3px solid var(--burgundy-600)}
+.stats{font-size:30px;font-weight:700;color:var(--burgundy-700)}
+.muted{color:var(--muted);font-size:13px}
+.banner{border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:14px;background:var(--red-bg);border:1px solid #f3bcb7;color:#7a1810}
+label{display:block;font-weight:600;font-size:13px;margin:0 0 5px;color:var(--burgundy-900)}
+input,select,textarea{font:inherit;width:100%;padding:10px 12px;border:1px solid #dccdd2;border-radius:9px;background:#fff;color:var(--text)}
+input:focus,select:focus,textarea:focus{border-color:var(--burgundy-500)}
+textarea{min-height:95px;resize:vertical}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field.full{grid-column:1/-1}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--burgundy-700);text-transform:uppercase;letter-spacing:.05em;background:var(--burgundy-50)}
+tr:hover td{background:#fdf9fa}
+.pill{display:inline-block;border-radius:99px;padding:3px 10px;background:var(--burgundy-100);color:var(--burgundy-800);font-size:12px;font-weight:700}
+.pill.High{background:var(--amber-bg);color:var(--amber)}
+.pill.Critical{background:var(--red-bg);color:#a5211a}
+.pill.Normal,.pill.Active{background:var(--green-bg);color:var(--green)}
+.pill.Low,.pill.Inactive{background:#efebec;color:#6b5d61}
+.hidden{display:none!important}
+.auth{max-width:430px;margin:7vh auto}
+.auth h2{font-size:22px}
+.foot{color:var(--muted);font-size:12px;padding:12px 0}
+.stack>*+*{margin-top:12px}
+@media(max-width:760px){.grid,.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.wrap{padding:12px}.panel{padding:14px}header{padding:14px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#6b1d34" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
+    <div><h1>Team Handover</h1><small>Shift notes · decisions · outstanding actions</small></div>
+  </div>
+  <div id="session"></div>
+</header>
+
+<div class="wrap">
+  <div id="banner" class="banner hidden" role="alert"></div>
+
+  <section id="login" class="panel auth">
+    <h2>Staff sign-in</h2>
+    <div id="firstSetup" class="hidden stack">
+      <p class="muted">Welcome. Create the first administrator account to get started.</p>
+      <div class="field"><label for="firstName">Administrator name</label><input id="firstName" autocomplete="name"></div>
+      <div class="field"><label for="firstPin">Create PIN (6+ characters)</label><input id="firstPin" type="password" autocomplete="new-password"></div>
+      <div class="actions"><button onclick="createFirst()">Create administrator</button></div>
+    </div>
+    <div id="loginForm" class="stack">
+      <div class="field"><label for="staffSelect">Staff member</label><select id="staffSelect"></select></div>
+      <div class="field"><label for="pin">PIN</label><input id="pin" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')signIn()"></div>
+      <div class="actions"><button onclick="signIn()">Sign in</button></div>
+    </div>
+    <p id="loginLoading" class="muted">Connecting…</p>
+  </section>
+
+  <div id="app" class="hidden">
+    <nav id="nav">
+      <button data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
+      <button data-page="editor" onclick="showPage('editor')">New handover</button>
+      <button data-page="history" onclick="showPage('history')">History</button>
+      <button data-page="search" onclick="showPage('search')">Search</button>
+      <button data-page="staff" onclick="showPage('staff')">Staff</button>
+      <button data-page="backup" onclick="showPage('backup')">Backups</button>
+      <span class="spacer"></span>
+      <button class="secondary" onclick="signOut()">Sign out</button>
+    </nav>
+
+    <section id="dashboard" class="page">
+      <div class="grid" id="stats"></div>
+      <div class="panel" style="margin-top:16px"><h2>Recent handovers</h2><div id="recent"></div></div>
+    </section>
+
+    <section id="editor" class="page hidden">
+      <div class="panel">
+        <h2 id="editorTitle">New handover</h2>
+        <form id="handoverForm" onsubmit="saveHandover(event)">
+          <div class="fields">
+            <div class="field"><label for="date">Date</label><input id="date" type="date" required></div>
+            <div class="field"><label for="shift">Shift</label><select id="shift"><option>Day</option><option>Evening</option><option>Night</option><option>Other</option></select></div>
+            <div class="field"><label for="outgoing">Outgoing staff</label><input id="outgoing" required></div>
+            <div class="field"><label for="incoming">Incoming staff</label><input id="incoming"></div>
+            <div class="field"><label for="priority">Priority</label><select id="priority"><option>Low</option><option selected>Normal</option><option>High</option><option>Critical</option></select></div>
+            <div class="field"><label for="title">Short title</label><input id="title" placeholder="Optional summary title"></div>
+            <div class="field full"><label for="notes">Notes / status</label><textarea id="notes"></textarea></div>
+            <div class="field full"><label for="decisions">Decisions</label><textarea id="decisions"></textarea></div>
+            <div class="field full"><label for="incidents">Incidents / risks</label><textarea id="incidents"></textarea></div>
+            <div class="field full"><label for="actions">Outstanding actions</label><textarea id="actions"></textarea></div>
+          </div>
+          <div class="actions"><button type="submit" id="saveBtn">Save handover</button><button type="button" class="secondary" onclick="resetForm()">Cancel</button></div>
+        </form>
+        <p id="revisionInfo" class="muted"></p>
+      </div>
+    </section>
+
+    <section id="history" class="page hidden"><div class="panel"><h2>Handover history</h2><div id="historyList"></div></div></section>
+
+    <section id="search" class="page hidden">
+      <div class="panel"><h2>Search saved handovers</h2>
+        <div class="fields"><div class="field full"><label for="query">Search terms</label><input id="query" placeholder="Search notes, names, dates, decisions…" oninput="renderSearch()"></div></div>
+        <div id="searchResults" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <section id="staff" class="page hidden">
+      <div class="panel"><h2>Staff management</h2>
+        <p class="muted">Administrator only. PINs are stored as salted scrypt hashes on the server.</p>
+        <div class="fields">
+          <div class="field"><label for="newStaffName">Staff name</label><input id="newStaffName"></div>
+          <div class="field"><label for="newStaffPin">PIN (6+ characters)</label><input id="newStaffPin" type="password" autocomplete="new-password"></div>
+          <div class="field"><label for="newStaffRole">Role</label><select id="newStaffRole"><option value="staff">Staff</option><option value="admin">Administrator</option></select></div>
+        </div>
+        <div class="actions"><button onclick="addStaff()">Add staff account</button></div>
+        <div id="staffList" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="backup" class="page hidden">
+      <div class="panel"><h2>Backup and restore</h2>
+        <p>Your data lives in the shared database. Export a JSON backup before large changes. Importing <b>replaces everything</b> in the database, so export first.</p>
+        <div class="actions">
+          <button onclick="exportBackup()">Export backup (admin)</button>
+          <label class="button secondary" style="cursor:pointer">Import backup (admin)<input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importBackup(event)"></label>
+          <button class="secondary" onclick="exportCsv()">Export handovers CSV</button>
+        </div>
+        <div id="backupInfo" class="muted" style="margin-top:10px"></div>
+      </div>
+    </section>
+  </div>
+  <div class="foot">Team Handover · records are stored in your organisation's database. Keep operational records in accordance with company policy.</div>
+</div>
+
+<script>
+'use strict';
+const TOKEN_KEY = 'team-handover-token';
+let token = null, user = null, rows = [], editingId = null, editingRevision = null;
+try { token = sessionStorage.getItem(TOKEN_KEY); } catch (e) {}
+const $ = id => document.getElementById(id);
+const FIELDS = ['date','shift','outgoing','incoming','priority','title','notes','decisions','incidents','actions'];
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function banner(msg){const b=$('banner');b.textContent=msg||'';b.classList.toggle('hidden',!msg)}
+
+async function api(action, data = {}) {
+  let res;
+  try {
+    res = await fetch('/api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      body: JSON.stringify({ action, ...data })
+    });
+  } catch (e) { throw new Error('Cannot reach the server. Check your connection.'); }
+  const json = await res.json().catch(() => ({}));
+  if (res.status === 401 && token) { signOut(); throw new Error(json.error || 'Session expired.'); }
+  if (!res.ok) throw new Error(json.error || 'Request failed (' + res.status + ').');
+  return json;
+}
+const run = fn => async (...a) => { try { await fn(...a); } catch (e) { alert(e.message); } };
+
+async function init() {
+  try {
+    const st = await api('status');
+    banner('');
+    $('loginLoading').classList.add('hidden');
+    if (st.needsSetup) { $('firstSetup').classList.remove('hidden'); $('loginForm').classList.add('hidden'); }
+    else $('staffSelect').innerHTML = st.staff.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');
+    if (token && !st.needsSetup) {
+      try { const me = await api('me'); startSession(me.user); } catch (e) {}
+    }
+  } catch (e) {
+    $('loginLoading').classList.add('hidden');
+    banner(e.message);
+  }
+}
+
+const createFirst = run(async () => {
+  await api('setup', { name: $('firstName').value, pin: $('firstPin').value });
+  alert('Administrator created. Sign in now.');
+  $('firstPin').value = '';
+  location.reload();
+});
+
+const signIn = run(async () => {
+  const r = await api('login', { staffId: $('staffSelect').value, pin: $('pin').value });
+  token = r.token;
+  try { sessionStorage.setItem(TOKEN_KEY, token); } catch (e) {}
+  $('pin').value = '';
+  startSession(r.user);
+});
+
+function startSession(u) {
+  user = u;
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('session').textContent = `${u.name} · ${u.role}`;
+  showPage('dashboard');
+}
+
+function signOut() {
+  token = null; user = null; rows = [];
+  try { sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+  $('pin').value = '';
+  $('session').textContent = '';
+}
+
+async function loadRows() { rows = (await api('list')).handovers; }
+
+const showPage = run(async page => {
+  document.querySelectorAll('.page').forEach(x => x.classList.add('hidden'));
+  $(page).classList.remove('hidden');
+  document.querySelectorAll('#nav [data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  if (['dashboard', 'history', 'search'].includes(page)) await loadRows();
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'history') renderHistory();
+  if (page === 'search') renderSearch();
+  if (page === 'staff') await renderStaff();
+  if (page === 'editor' && !editingId) resetForm(false);
+});
+
+function table(list) {
+  if (!list.length) return '<p class="muted">No handovers found.</p>';
+  return `<div class="tablewrap"><table><thead><tr><th>Date / shift</th><th>Title / staff</th><th>Priority</th><th>Updated</th><th>Action</th></tr></thead><tbody>${list.map(r => `<tr>
+    <td>${esc(r.date)}<br><span class="muted">${esc(r.shift)}</span></td>
+    <td><b>${esc(r.title || 'Handover')}</b><br><span class="muted">${esc(r.outgoing)} → ${esc(r.incoming || '—')}</span></td>
+    <td><span class="pill ${esc(r.priority)}">${esc(r.priority)}</span></td>
+    <td>${esc(new Date(r.updatedAt).toLocaleString())}<br><span class="muted">by ${esc(r.updatedByName)} · rev ${r.revision}</span></td>
+    <td><button class="secondary" data-open="${esc(r.id)}">Open</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-open]'); if (b) editRecord(b.dataset.open); });
+
+function renderDashboard() {
+  const today = new Date().toISOString().slice(0, 10);
+  $('stats').innerHTML = [
+    ['Total handovers', rows.length],
+    ['High / critical', rows.filter(r => ['High', 'Critical'].includes(r.priority)).length],
+    ['Updated today', rows.filter(r => r.updatedAt.slice(0, 10) === today).length]
+  ].map(([a, b]) => `<div class="panel"><div class="muted">${a}</div><div class="stats">${b}</div></div>`).join('');
+  $('recent').innerHTML = table(rows.slice(0, 8));
+}
+function renderHistory() { $('historyList').innerHTML = table(rows); }
+function renderSearch() {
+  const q = ($('query').value || '').toLowerCase().trim();
+  $('searchResults').innerHTML = table(rows.filter(r => JSON.stringify(r).toLowerCase().includes(q)));
+}
+
+function resetForm(go = true) {
+  editingId = null; editingRevision = null;
+  $('handoverForm').reset();
+  $('date').value = new Date().toISOString().slice(0, 10);
+  $('outgoing').value = user?.name || '';
+  $('priority').value = 'Normal';
+  $('editorTitle').textContent = 'New handover';
+  $('revisionInfo').textContent = 'New record';
+  if (go) showPage('editor');
+}
+
+function editRecord(id) {
+  const r = rows.find(x => x.id === id);
+  if (!r) return;
+  editingId = id; editingRevision = r.revision;
+  for (const k of FIELDS) $(k).value = r[k] || '';
+  $('editorTitle').textContent = 'Edit handover';
+  $('revisionInfo').textContent = `Record ${r.id} · revision ${r.revision} · created by ${r.createdByName}`;
+  showPage('editor');
+}
+
+const saveHandover = run(async e => {
+  e.preventDefault();
+  const record = { id: editingId || undefined };
+  for (const k of FIELDS) record[k] = $(k).value.trim();
+  $('saveBtn').disabled = true;
+  try {
+    await api('save', { record, expectedRevision: editingRevision });
+  } finally { $('saveBtn').disabled = false; }
+  editingId = null; editingRevision = null;
+  alert('Handover saved.');
+  showPage('dashboard');
+});
+
+const addStaff = run(async () => {
+  await api('addStaff', { name: $('newStaffName').value, pin: $('newStaffPin').value, role: $('newStaffRole').value });
+  $('newStaffName').value = ''; $('newStaffPin').value = '';
+  await renderStaff();
+});
+
+async function renderStaff() {
+  if (user.role !== 'admin') { $('staffList').innerHTML = '<p>Administrator access required.</p>'; return; }
+  const { staff } = await api('staffList');
+  $('staffList').innerHTML = '<div class="tablewrap"><table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
+    staff.map(s => `<tr><td>${esc(s.name)}</td><td>${esc(s.role)}</td><td><span class="pill ${s.active ? 'Active' : 'Inactive'}">${s.active ? 'Active' : 'Inactive'}</span></td><td>${s.id === user.id ? 'Current user' : `<button class="secondary" data-toggle="${esc(s.id)}">${s.active ? 'Deactivate' : 'Reactivate'}</button>`}</td></tr>`).join('') +
+    '</tbody></table></div>';
+}
+document.addEventListener('click', run(async e => {
+  const b = e.target.closest('[data-toggle]');
+  if (b) { await api('toggleStaff', { id: b.dataset.toggle }); await renderStaff(); }
+}));
+
+const exportBackup = run(async () => {
+  const data = await api('exportBackup');
+  download(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), 'team-handover-backup-' + new Date().toISOString().slice(0, 10) + '.json');
+  $('backupInfo').textContent = 'Backup exported. Store it in an approved restricted location. It contains PIN hashes.';
+});
+
+function importBackup(e) {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  if (!confirm('Import REPLACES all data in the database. Export a backup first. Continue?')) return;
+  const reader = new FileReader();
+  reader.onload = run(async () => {
+    let data;
+    try { data = JSON.parse(reader.result); } catch (err) { throw new Error('Import failed: file is not valid JSON.'); }
+    await api('importBackup', { data });
+    alert('Backup imported. Sign in again.');
+    signOut(); location.reload();
+  });
+  reader.readAsText(f);
+}
+
+const exportCsv = run(async () => {
+  await loadRows();
+  const cols = ['id','revision','date','shift','outgoing','incoming','priority','title','notes','decisions','incidents','actions','createdAt','createdByName','updatedAt','updatedByName'];
+  const csv = [cols.join(','), ...rows.map(r => cols.map(c => '"' + String(r[c] ?? '').replace(/"/g, '""') + '"').join(','))].join('\r\n');
+  download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'team-handovers.csv');
+});
+
+function download(blob, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+init();
+</script>
+</body>
+</html>
